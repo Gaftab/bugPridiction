@@ -228,11 +228,11 @@ svm_scores_acc = cross_val_score(clf, x_ts, y, cv=10,scoring='accuracy')
 svm_scores_roc = cross_val_score(clf, x_ts, y, cv=10,scoring='roc_auc') 
 svm_scores_f1 = cross_val_score(clf, x_ts, y, cv=10,scoring='f1_macro') 
 svm_scores_recall = cross_val_score(clf, x_ts, y, cv=10,scoring='recall_macro') 
-print(svm_scores_acc.mean())
-print(svm_scores_pre.mean())
-print(svm_scores_roc.mean())
-print(svm_scores_f1.mean())
-print(svm_scores_recall.mean())
+print("Acuraccy:",svm_scores_acc.mean())
+print("Precision:",svm_scores_pre.mean())
+print("ROC_UAC:",svm_scores_roc.mean())
+print("F1:",svm_scores_f1.mean())
+print("Recall:",svm_scores_recall.mean())
 
 # #3.2) NBM
   
