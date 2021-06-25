@@ -17,25 +17,24 @@ from sklearn.svm import SVC
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.model_selection import GridSearchCV
 from scipy.sparse import hstack
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler ,LabelBinarizer
 pandas.options.mode.chained_assignment = None 
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.metrics import make_scorer
 from sklearn.metrics import accuracy_score
-
+import warnings
+warnings.filterwarnings('ignore')
 
 #0) INITIALIZE DATASET
 
-    
-csv = r'/content/drive/MyDrive/softwareBugPred/bugPridiction/data/kc2_csv.csv'
+csv = r'/content/drive/MyDrive/softwareBugPred/bugPridiction/data/cm1.csv'
 dataset = pandas.read_csv(csv)
-feature_cols = ['loc','v(g)','ev(g)','iv(g)','n','v','l','d','i','e','b','t','lOCode','lOComment','lOBlank','lOCodeAndComment','uniq_Op','uniq_Opnd','total_Op','total_Opnd','branchCount']
-print(dataset.head())
+feature_cols = ['loc','v(g)','ev(g)','iv(g)','n','v','l','d','i','e','b','t','lOCode','lOComment','lOBlank','locCodeAndComment','uniq_Op','uniq_Opnd','total_Op','total_Opnd','branchCount']
+# print(dataset.head())
 X=dataset[feature_cols]
 # print(X)
-
 
 # #1) FEATURE ENGINEERING
 
@@ -52,7 +51,7 @@ x_sm=train=X[feature_cols]
 
 # # # #Converting data frame to sparce matrix
 x_sm=scipy.sparse.csr_matrix(x_sm.values)
-y=dataset.problems
+y=dataset.defects
 # print(x_sm)
 
 
@@ -67,49 +66,49 @@ for x in range(1,21,11):
     test = SelectKBest(score_func=chi2, k=x)
     fit = test.fit(x_sm, y)
     x_t= fit.transform(x_sm)
-    scores = cross_val_score(clf, x_sm, y, cv=10)
+    scores = cross_val_score(clf, x_sm, y, cv=10 )
     print('svm cross validation scores ',scores)
 
-#2
-clf=LogisticRegression()
-for x in range(1,21,11):
-    test = SelectKBest(score_func=chi2, k=x)
-    fit = test.fit(x_sm, y)
-    x_t= fit.transform(x_sm)
-    scores = cross_val_score(clf, x_sm, y, cv=10)
-    print('LogisticRegression cross validation scores ',scores)
-#3
-clf=RandomForestClassifier()
-for x in range(1,21,11):
-    test = SelectKBest(score_func=chi2, k=x)
-    fit = test.fit(x_sm, y)
-    x_t= fit.transform(x_sm)
-    scores = cross_val_score(clf, x_sm, y, cv=10)
-    print('RandomForestClassifier cross validation scores ',scores)
-#4
-GradientBoostingClassifier
-clf=GradientBoostingClassifier()
-for x in range(1,21,11):
-    test = SelectKBest(score_func=chi2, k=x)
-    fit = test.fit(x_sm, y)
-    x_t= fit.transform(x_sm)
-    scores = cross_val_score(clf, x_sm, y, cv=10)
-    print(' GradientBoostingClassifier cross validation scores ',scores)
-#5
-clf=AdaBoostClassifier()
-for x in range(1,21, 11):
-    test = SelectKBest(score_func=chi2, k=x)
-    fit = test.fit(x_sm, y)
-    scores = cross_val_score(clf, x_sm, y, cv=10)
-    print('AdaBoostClassifier cross validation scores ',scores)
-#6
-clf=RandomForestClassifier()
-for x in range(1,21,11):
-    test = SelectKBest(score_func=chi2, k=x)
-    fit = test.fit(x_sm, y)
-    x_t= fit.transform(x_sm)
-    scores = cross_val_score(clf, x_sm, y, cv=10)
-    print('RandomForestClassifier cross validation scores ',scores)
+# #2
+# clf=LogisticRegression()
+# for x in range(1,21,11):
+#     test = SelectKBest(score_func=chi2, k=x)
+#     fit = test.fit(x_sm, y)
+#     x_t= fit.transform(x_sm)
+#     scores = cross_val_score(clf, x_sm, y, cv=10)
+#     print('LogisticRegression cross validation scores ',scores)
+# #3
+# clf=RandomForestClassifier()
+# for x in range(1,21,11):
+#     test = SelectKBest(score_func=chi2, k=x)
+#     fit = test.fit(x_sm, y)
+#     x_t= fit.transform(x_sm)
+#     scores = cross_val_score(clf, x_sm, y, cv=10)
+#     print('RandomForestClassifier cross validation scores ',scores)
+# #4
+# GradientBoostingClassifier
+# clf=GradientBoostingClassifier()
+# for x in range(1,21,11):
+#     test = SelectKBest(score_func=chi2, k=x)
+#     fit = test.fit(x_sm, y)
+#     x_t= fit.transform(x_sm)
+#     scores = cross_val_score(clf, x_sm, y, cv=10)
+#     print(' GradientBoostingClassifier cross validation scores ',scores)
+# #5
+# clf=AdaBoostClassifier()
+# for x in range(1,21, 11):
+#     test = SelectKBest(score_func=chi2, k=x)
+#     fit = test.fit(x_sm, y)
+#     scores = cross_val_score(clf, x_sm, y, cv=10)
+#     print('AdaBoostClassifier cross validation scores ',scores)
+# #6
+# clf=RandomForestClassifier()
+# for x in range(1,21,11):
+#     test = SelectKBest(score_func=chi2, k=x)
+#     fit = test.fit(x_sm, y)
+#     x_t= fit.transform(x_sm)
+#     scores = cross_val_score(clf, x_sm, y, cv=10)
+#     print('RandomForestClassifier cross validation scores ',scores)
 
 
 # # Use k that has the most highest scores.
@@ -129,7 +128,7 @@ x_ts=x_sm
 # #Experiment both x; x_ts
 
 x=x_ts
-scoring = {'AUC': 'roc_auc', 'Accuracy': make_scorer(accuracy_score)}
+# scoring = {'AUC': 'roc_auc', 'Accuracy': make_scorer(accuracy_score)}
 
 search_grid = [{'kernel': ['rbf'], 'gamma': [1e-2, 1e-3, 1e-4, 1e-5],
                      'C': [0.001, 0.10, 0.1, 10, 25, 50, 100, 1000]},
@@ -137,7 +136,7 @@ search_grid = [{'kernel': ['rbf'], 'gamma': [1e-2, 1e-3, 1e-4, 1e-5],
                      'C': [0.001, 0.10, 0.1, 10, 25, 50, 100, 1000]},
                     {'kernel': ['linear'], 'C': [0.001, 0.10, 0.1, 10, 25, 50, 100, 1000]}
                    ]
-search = GridSearchCV(SVC(), search_grid, cv=10, n_jobs=16 ,scoring= scoring ,refit='AUC' )
+search = GridSearchCV(SVC(), search_grid, cv=10, n_jobs=16 ,scoring='%s_macro' % 'recall' )
 search.fit(x, y)
 search.best_params_
 svm_best_par=search.best_params_
@@ -145,74 +144,74 @@ print('SVM best parameters ',svm_best_par)
 
 #2.3)GradientBoostingClassifier
 
-search_grid = {"loss":["deviance"],
-    "learning_rate": [0.01, 0.025, 0.05, 0.075, 0.1, 0.15, 0.2],
-    "max_features":["log2","sqrt"],
-    "n_estimators":[100],
-     "max_depth":[3,5,8]}
+# search_grid = {"loss":["deviance"],
+#     "learning_rate": [0.01, 0.025, 0.05, 0.075, 0.1, 0.15, 0.2],
+#     "max_features":["log2","sqrt"],
+#     "n_estimators":[100],
+#      "max_depth":[3,5,8]}
 
-search = GridSearchCV(GradientBoostingClassifier(), search_grid, cv=10,n_jobs=16 ,scoring='%s_macro' % 'recall')
-search.fit(x, y)
-search.best_params_
-bagRg_best_par=search.best_params_
-print('GradientBoostingClassifier best parameters ',bagRg_best_par)
+# search = GridSearchCV(GradientBoostingClassifier(), search_grid, cv=10,n_jobs=16 ,scoring='%s_macro' % 'recall')
+# search.fit(x, y)
+# search.best_params_
+# bagRg_best_par=search.best_params_
+# print('GradientBoostingClassifier best parameters ',bagRg_best_par)
 
 
 
-# #2.2) KNN
+# # #2.2) KNN
 
-# search_grid = dict(n_neighbors = list(range(1,31)), metric = ['euclidean', 'manhattan'] )
-# search = GridSearchCV(KNeighborsClassifier(), search_grid, cv = 10, scoring = 'recall', n_jobs=16)
+# # search_grid = dict(n_neighbors = list(range(1,31)), metric = ['euclidean', 'manhattan'] )
+# # search = GridSearchCV(KNeighborsClassifier(), search_grid, cv = 10, scoring = 'recall', n_jobs=16)
+# # search.fit(x,y)
+# # search.best_params_
+
+
+
+# #2.4) Logistic Regression
+
+# search_grid={"C":numpy.logspace(-3,3,7), "penalty":["l2"]}# l1 lasso l2 ridge
+# search=GridSearchCV(LogisticRegression(solver='lbfgs', max_iter=1000), search_grid, cv=10)
 # search.fit(x,y)
 # search.best_params_
+# print('Logistic Regression Best Parameters ',search.best_params_)
 
 
-
-#2.4) Logistic Regression
-
-search_grid={"C":numpy.logspace(-3,3,7), "penalty":["l2"]}# l1 lasso l2 ridge
-search=GridSearchCV(LogisticRegression(solver='lbfgs', max_iter=1000), search_grid, cv=10)
-search.fit(x,y)
-search.best_params_
-print('Logistic Regression Best Parameters ',search.best_params_)
+# # #2.5) AdaboostClassifier
 
 
-# #2.5) AdaboostClassifier
+# search_grid={'n_estimators':[500,1000,2000],'learning_rate':[.001,0.01,0.1]}
+# search=GridSearchCV(estimator=AdaBoostClassifier(),param_grid=search_grid,scoring='recall' , cv=10, n_jobs=32)
+# search.fit(x,y)
+# search.best_params_
+# ada_best_par=search.best_params_
+# print('AdaboostClassifier Best Parameters ',ada_best_par)
 
 
-search_grid={'n_estimators':[500,1000,2000],'learning_rate':[.001,0.01,0.1]}
-search=GridSearchCV(estimator=AdaBoostClassifier(),param_grid=search_grid,scoring='recall' , cv=10, n_jobs=32)
-search.fit(x,y)
-search.best_params_
-ada_best_par=search.best_params_
-print('AdaboostClassifier Best Parameters ',ada_best_par)
+# # #2.6) RandomForestClassifier
 
+# search_grid = { 
+#     'n_estimators': [200, 700],
+#     'max_features': ['auto', 'sqrt', 'log2']
+# }
+# search = GridSearchCV(estimator=RandomForestClassifier(), param_grid=search_grid, cv= 10, n_jobs=-1)
+# search.fit(x, y)
+# search.best_params_
+# Rf_best_par=search.best_params_
+# print('RandomForestClassifier Best Parameters ',Rf_best_par)
 
-# #2.6) RandomForestClassifier
+# #2.7) ExtraTreesClassifier
 
-search_grid = { 
-    'n_estimators': [200, 700],
-    'max_features': ['auto', 'sqrt', 'log2']
-}
-search = GridSearchCV(estimator=RandomForestClassifier(), param_grid=search_grid, cv= 10, n_jobs=-1)
-search.fit(x, y)
-search.best_params_
-Rf_best_par=search.best_params_
-print('RandomForestClassifier Best Parameters ',Rf_best_par)
-
-#2.7) ExtraTreesClassifier
-
-search_grid = { 
-    'n_estimators': [200, 700],
-    'max_features': ['auto', 'sqrt', 'log2'],
-     'min_weight_fraction_leaf':[0.1],
-    'criterion':['gini']
-}
-search = GridSearchCV(ExtraTreesClassifier(), param_grid=search_grid, cv= 10, n_jobs=-1)
-search.fit(x, y)
-search.best_params_
-ETC_best_par=search.best_params_
-print('ExtraTreesClassifier Best Parameters ',ETC_best_par)
+# search_grid = { 
+#     'n_estimators': [200, 700],
+#     'max_features': ['auto', 'sqrt', 'log2'],
+#      'min_weight_fraction_leaf':[0.1],
+#     'criterion':['gini']
+# }
+# search = GridSearchCV(ExtraTreesClassifier(), param_grid=search_grid, cv= 10, n_jobs=-1)
+# search.fit(x, y)
+# search.best_params_
+# ETC_best_par=search.best_params_
+# print('ExtraTreesClassifier Best Parameters ',ETC_best_par)
 
 #3) CLASSIFIERS
     
@@ -221,10 +220,19 @@ print('ExtraTreesClassifier Best Parameters ',ETC_best_par)
 #3) CLASSIFIERS
 
 # 3.1) SVM
-clf=svm.SVC(C=25, gamma= 0.0001,kernel="sigmoid")
-scores_ts = cross_val_score(clf, x_ts, y, cv=10)
-svm_score=scores_ts.mean()
-print(svm_score)
+clf=svm.SVC(C=25, gamma= 0.001,kernel="rbf")
+# score=['accuracy','','','']
+
+svm_scores_pre = cross_val_score(clf, x_ts, y, cv=10,scoring='precision_macro') 
+svm_scores_acc = cross_val_score(clf, x_ts, y, cv=10,scoring='accuracy') 
+svm_scores_roc = cross_val_score(clf, x_ts, y, cv=10,scoring='roc_auc') 
+svm_scores_f1 = cross_val_score(clf, x_ts, y, cv=10,scoring='f1_macro') 
+svm_scores_recall = cross_val_score(clf, x_ts, y, cv=10,scoring='recall_macro') 
+print(svm_scores_acc.mean())
+print(svm_scores_pre.mean())
+print(svm_scores_roc.mean())
+print(svm_scores_f1.mean())
+print(svm_scores_recall.mean())
 
 # #3.2) NBM
   
