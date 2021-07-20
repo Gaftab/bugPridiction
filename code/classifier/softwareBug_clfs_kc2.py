@@ -214,139 +214,158 @@ x=x_ts
 
 #3) CLASSIFIERS
 
+
+# #3) CLASSIFIERS
+
 # 3.1) SVM
-clf=svm.SVC(C=5, kernel="linear")
-scores_ts = cross_val_score(clf, x_ts, y, cv=10)
-svm_score=scores_ts.mean()
-print('SVM Accuracy: ',svm_score)
-
-# #3.2) KNN
-
-# #3.2.A)  text and social media features
-# clf= KNeighborsClassifier(n_neighbors= 3, metric="euclidean")
-# scores_ts = cross_val_score(clf, x_ts, y, cv=10)
-# knnTs=scores_ts.mean()
+clf=svm.SVC(C=25, gamma= 0.001,kernel="rbf")
+svm_scores_pre = cross_val_score(clf, x_ts, y, cv=10,scoring='precision_weighted') 
+svm_scores_acc = cross_val_score(clf, x_ts, y, cv=10,scoring='accuracy') 
+svm_scores_roc = cross_val_score(clf, x_ts, y, cv=10,scoring='roc_auc') 
+svm_scores_f1 = cross_val_score(clf, x_ts, y, cv=10,scoring='f1_weighted') 
+svm_scores_recall = cross_val_score(clf, x_ts, y, cv=10,scoring='recall_weighted') 
+svm_acc=svm_scores_acc.mean()
+svm_pre=svm_scores_pre.mean()
+svm_roc=svm_scores_roc.mean()
+svm_f1=svm_scores_f1.mean()
+svm_recall=svm_scores_recall.mean()
 
 # #3.2) NBM
   
 clf= MultinomialNB()
-scores_ts = cross_val_score(clf, x_ts, y, cv=10)
-nbm_score=scores_ts.mean()
-print('NBM Accuracy: ',nbm_score)
+nb_scores_pre = cross_val_score(clf, x_ts, y, cv=10,scoring='precision_weighted') 
+nb_scores_acc = cross_val_score(clf, x_ts, y, cv=10,scoring='accuracy') 
+nb_scores_roc = cross_val_score(clf, x_ts, y, cv=10,scoring='roc_auc') 
+nb_scores_f1 = cross_val_score(clf, x_ts, y, cv=10,scoring='f1_weighted') 
+nb_scores_recall = cross_val_score(clf, x_ts, y, cv=10,scoring='recall_weighted') 
+NB_acc=nb_scores_acc.mean()
+NB_pre=nb_scores_pre.mean()
+NB_roc=nb_scores_roc.mean()
+NB_f1=nb_scores_f1.mean()
+NB_recall=nb_scores_recall.mean()
 
 
 
-#3.3) Logistic Regression
+# #3.3) Logistic Regression
 
 clf=LogisticRegression(C=100,penalty="l2",solver='lbfgs', max_iter=1000)
-scores_ts = cross_val_score(clf, x_ts, y, cv=10)
-lg_score=scores_ts.mean()
-print('Logistic Regression Accuracy: ',lg_score)
+LR_scores_pre = cross_val_score(clf, x_ts, y, cv=10,scoring='precision_weighted') 
+LR_scores_acc = cross_val_score(clf, x_ts, y, cv=10,scoring='accuracy') 
+LR_scores_roc = cross_val_score(clf, x_ts, y, cv=10,scoring='roc_auc') 
+LR_scores_f1 = cross_val_score(clf, x_ts, y, cv=10,scoring='f1_weighted') 
+LR_scores_recall = cross_val_score(clf, x_ts, y, cv=10,scoring='recall_weighted') 
+LR_acc=LR_scores_acc.mean()
+LR_pre=LR_scores_pre.mean()
+LR_roc=LR_scores_roc.mean()
+LR_f1=LR_scores_f1.mean()
+LR_recall=LR_scores_recall.mean()
 
-# #3.4) AdaBoost
+# # #3.4) AdaBoost
  
 clf=AdaBoostClassifier(learning_rate=0.01, n_estimators=2000)
-scores_ts = cross_val_score(clf, x_ts, y, cv=10)
-adaBoost_score=scores_ts.mean()
-print('AdaBoost Accuracy: ',adaBoost_score)
+AdaBoost_scores_pre = cross_val_score(clf, x_ts, y, cv=10,scoring='precision_weighted') 
+AdaBoost_scores_acc = cross_val_score(clf, x_ts, y, cv=10,scoring='accuracy') 
+AdaBoost_scores_roc = cross_val_score(clf, x_ts, y, cv=10,scoring='roc_auc') 
+AdaBoost_scores_f1 = cross_val_score(clf, x_ts, y, cv=10,scoring='f1_weighted') 
+AdaBoost_scores_recall = cross_val_score(clf, x_ts, y, cv=10,scoring='recall_weighted') 
+AdaBoost_acc=AdaBoost_scores_acc.mean()
+AdaBoost_pre=AdaBoost_scores_pre.mean()
+AdaBoost_roc=AdaBoost_scores_roc.mean()
+AdaBoost_f1=AdaBoost_scores_f1.mean()
+AdaBoost_recall=AdaBoost_scores_recall.mean()
 
-# #3.5) RF
+# # #3.5) RF
  
 clf=RandomForestClassifier( max_features= 'sqrt', n_estimators= 700)
-scores_ts = cross_val_score(clf, x_ts, y, cv=10)
-rf_score=scores_ts.mean()
-print('RF Accuracy: ',rf_score)
+RF_scores_pre = cross_val_score(clf, x_ts, y, cv=10,scoring='precision_weighted') 
+RF_scores_acc = cross_val_score(clf, x_ts, y, cv=10,scoring='accuracy') 
+RF_scores_roc = cross_val_score(clf, x_ts, y, cv=10,scoring='roc_auc') 
+RF_scores_f1 = cross_val_score(clf, x_ts, y, cv=10,scoring='f1_weighted') 
+RF_scores_recall = cross_val_score(clf, x_ts, y, cv=10,scoring='recall_weighted') 
+RF_acc=RF_scores_acc.mean()
+RF_pre=RF_scores_pre.mean()
+RF_roc=RF_scores_roc.mean()
+RF_f1=RF_scores_f1.mean()
+RF_recall=RF_scores_recall.mean()
 
-#3.6) GradientBoostingClassifier
+# #3.6) GradientBoostingClassifier
 
 clf=GradientBoostingClassifier(loss='deviance', max_features='sqrt',n_estimators=100, learning_rate=0.01, max_depth=3, random_state=0)
-scores_ts = cross_val_score(clf, x_ts, y, cv=10)
-GrB_score=scores_ts.mean()
-print('GradientBoostingClassifier Accuracy: ',GrB_score)
+GBC_scores_pre = cross_val_score(clf, x_ts, y, cv=10,scoring='precision_weighted') 
+GBC_scores_acc = cross_val_score(clf, x_ts, y, cv=10,scoring='accuracy') 
+GBC_scores_roc = cross_val_score(clf, x_ts, y, cv=10,scoring='roc_auc') 
+GBC_scores_f1 = cross_val_score(clf, x_ts, y, cv=10,scoring='f1_weighted') 
+GBC_scores_recall = cross_val_score(clf, x_ts, y, cv=10,scoring='recall_weighted') 
+GBC_acc=GBC_scores_acc.mean()
+GBC_pre=GBC_scores_pre.mean()
+GBC_roc=GBC_scores_roc.mean()
+GBC_f1=GBC_scores_f1.mean()
+GBC_recall=GBC_scores_recall.mean()
 
-# #3.7)ExtraTreesClassifier
+# # #3.7)ExtraTreesClassifier
  
-clf= ExtraTreesClassifier(n_estimators=200, max_features='log2', random_state=0, min_weight_fraction_leaf=0.1, criterion='gini')
-scores_ts = cross_val_score(clf, x_ts, y, cv=10)
-etc_score=scores_ts.mean()
-print('ExtraTreesClassifier Acuraccy: ',etc_score)
+# clf= ExtraTreesClassifier(n_estimators=200, max_features='log2', random_state=0, min_weight_fraction_leaf=0.1, criterion='gini')
+ETC_scores_pre = cross_val_score(clf, x_ts, y, cv=10,scoring='precision_weighted') 
+ETC_scores_acc = cross_val_score(clf, x_ts, y, cv=10,scoring='accuracy') 
+ETC_scores_roc = cross_val_score(clf, x_ts, y, cv=10,scoring='roc_auc') 
+ETC_scores_f1 = cross_val_score(clf, x_ts, y, cv=10,scoring='f1_weighted') 
+ETC_scores_recall = cross_val_score(clf, x_ts, y, cv=10,scoring='recall_weighted') 
+ETC_acc=ETC_scores_acc.mean()
+ETC_pre=ETC_scores_pre.mean()
+ETC_roc=ETC_scores_roc.mean()
+ETC_f1=ETC_scores_f1.mean()
+ETC_recall=ETC_scores_recall.mean()
 
 
 
 #4) RESULTS
 
 labels = ['SVM','NBM','LR','AdaBoost','RF','GBC','ETC']
-all_scores = [svm_score,nbm_score,lg_score,adaBoost_score,rf_score,GrB_score,etc_score]
+pre = [svm_pre,NB_pre,LR_pre,AdaBoost_pre,RF_pre,GBC_pre,ETC_pre]
+re = [svm_recall,NB_recall,LR_recall,AdaBoost_recall,RF_recall,GBC_recall,ETC_recall]
+aoc = [svm_roc,NB_roc,LR_roc,AdaBoost_roc,RF_roc,GBC_roc,ETC_roc]
+f1 = [svm_f1,NB_f1,LR_f1,AdaBoost_f1,RF_f1,GBC_f1,ETC_f1]
+acurracy = [svm_acc,NB_acc,LR_acc,AdaBoost_acc,RF_acc,GBC_acc,ETC_acc] 
 
 x = numpy.arange(len(labels))  # the label locations
-width = 0.5  # the width of the bars
+width = 0.17  # the width of the bars
 
-fig = plt.figure(figsize=(9,6))
+fig = plt.figure(figsize=(30,22))
 ax = fig.add_subplot()
-rects1 = ax.bar(x, all_scores, width)
+rects1 = ax.bar(x - width*2, acurracy, width, label='Acurracy score')
+rects2 = ax.bar(x - width, pre, width, label='Precision score')
+rects3 = ax.bar(x, re, width, label='Recall score')
+rects4 = ax.bar(x + width*2, aoc, width, label='ROC score')
+rects5 = ax.bar(x + width, f1, width, label='F1 score')
+
+
 
 
 # Add some text for labels, title and custom x-axis tick labels, etc.
-ax.set_ylabel('Accuracy')
-ax.set_title('Accuracy of the experimented Classifiers for KC2 dataset')
+ax.set_ylabel('Percentage Score')
+ax.set_title('Results of the experimented Classifiers for KC2 dataset')
 ax.set_xticks(x)
 ax.set_xticklabels(labels)
-plt.ylim(0.70, 0.99)
-# ax.legend(loc="upper center", bbox_to_anchor=(0.4, 1.20))
+plt.ylim(0.50, 0.99)
+ax.legend(loc="upper center", bbox_to_anchor=(0.4, 1.20),prop={"size":20})
 
 def autolabel(rects):
     """Attach a text label above each bar in *rects*, displaying its height."""
     for rect in rects:
         height = rect.get_height()
     
-        ax.annotate('{}'.format(round(100*height,3)),
+        ax.annotate('{}'.format(round(100*height,2)),
                     xy=(rect.get_x() + rect.get_width()/2, height),
                     xytext=(0, 3),  # 3 points vertical offset
+                     fontsize=14,
                
                     textcoords="offset points",
                     ha='center', va='bottom')
 autolabel(rects1)
+autolabel(rects2)
+autolabel(rects3)
+autolabel(rects4)
+autolabel(rects5)
+
 plt.show()
-result_dir = '/content/drive/MyDrive/softwareBugPred/bugPridiction/results'
-plt.savefig(f"{result_dir}/test.png")
-
-
-
-
-
-# labels = ['SVM','KNN','NBM','AdaBoost','RF']
-# allTs = [0.89999,0.89333,0.8633,0.8744,0.8844]
-# allT = [0.7444,0.8744,0.80,0.7944,0.84444]
-
-# x = numpy.arange(len(labels))  # the label locations
-# width = 0.35  # the width of the bars
-
-# fig = plt.figure(figsize=(12,7))
-# ax = fig.add_subplot()
-# rects1 = ax.bar(x - width/2, allTs, width, label='Dataset containing social media features and addition to textual features')
-# rects2 = ax.bar(x + width/2, allT, width, label='Dataset containing only textual features')
-
-# # Add some text for labels, title and custom x-axis tick labels, etc.
-# ax.set_ylabel('Accuracy')
-# ax.set_title('Accuracy of the experimented Classifiers')
-# ax.set_xticks(x)
-# ax.set_xticklabels(labels)
-# plt.ylim(0.70, 0.92)
-# ax.legend(loc="upper center", bbox_to_anchor=(0.4, 1.20))
-
-# def autolabel(rects):
-#     """Attach a text label above each bar in *rects*, displaying its height."""
-#     for rect in rects:
-#         height = rect.get_height()
-    
-#         ax.annotate('{}'.format(round(100*height,3)),
-#                     xy=(rect.get_x() + rect.get_width() / 2, height),
-#                     xytext=(0, 3),  # 3 points vertical offset
-               
-#                     textcoords="offset points",
-#                     ha='center', va='bottom')
-# autolabel(rects1)
-# autolabel(rects2)
-# plt.show()
-
 
